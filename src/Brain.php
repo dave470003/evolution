@@ -14,10 +14,9 @@ class Brain
         $brain = new Brain(4);
         $brain->entity = $entity;
 
-        $chromosomes = str_split($genome, 2);
+        $chromosomes = str_split($genome, 4);
         foreach ($chromosomes as $chromosome) {
-            $hex = unpack('h4hex', $genome);
-            $binary = base_convert($hex['hex'], 16, 2);
+            $binary = base_convert($chromosome, 16, 2);
 
             $weight = (int) base_convert(substr($binary, 0, 8), 2, 10);
             $fromType = (int) base_convert(substr($binary, 8, 1), 2, 10);

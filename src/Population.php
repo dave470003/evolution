@@ -45,6 +45,7 @@ class Population
         $this->breedMembers();
         $this->initializeGrid($this->members);
         $this->gen++;
+        $this->turn = 0;
 
         return $this;
     }
@@ -56,7 +57,7 @@ class Population
             $genome = '';
             for ($j = 0; $j < 10; $j++) {
                 $byteInt = rand(0, 255);
-                $byte = pack('c', $byteInt);
+                $byte = base_convert($byteInt, 10, 16);
                 $genome .= $byte;
             }
             $this->members[] = new Entity($genome, $i);
