@@ -4,8 +4,11 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 
 use App\Population;
 
-$population = new Population();
-for ($i = 0; $i < 1; $i++) {
-    $population->runTurns(200);
-    $population = $population->nextGen();
+$population = new Population(function ($cell) {
+    return $cell->getX() < 50;
+});
+for ($i = 0; $i < 1000; $i++) {
+    echo 'gen ' . $i . "\n";
+    $population->runTurns(50);
+    $population = $population->nextGen(in_array($i, [1, 2, 10, 100, 1000]));
 }

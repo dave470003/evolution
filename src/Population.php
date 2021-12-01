@@ -11,12 +11,16 @@ class Population
     protected $grid;
     protected $gen;
     protected $turn;
+    protected $record;
+    protected $survivorFunction;
 
-    public function __construct()
+    public function __construct($survivorFunction)
     {
         static::$instance = $this;
         $this->turn = 0;
         $this->gen = 0;
+        $this->record = true;
+        $this->survivorFunction = $survivorFunction;
         $this->initializePopulation();
         $this->initializeGrid($this->members);
     }
@@ -34,9 +38,10 @@ class Population
         return static::$snapshot;
     }
 
-    public function nextGen()
+    public function nextGen($record)
     {
-        $this->makeGif();
+        $this->record = $record;
+
         $this->breedMembers();
         $this->initializeGrid($this->members);
         $this->gen++;
@@ -70,14 +75,26 @@ class Population
 
     public function breedMembers()
     {
-        // breed survivors
-        $this->members = [];
+        $survivors = $this->grid->getSurvivors($this->survivorFunction);
+        $newPop = [];
+        $i = 0;
+        while (count($newPop) < 1000) {
+            $survivorKeys = array_rand($survivors, 2);
+            $baby = $survivors[$survivorKeys[0]]->breed($survivors[$survivorKeys[1]], $i);
+            $newPop[] = $baby;
+            $i++;
+        }
+
+        $this->members = $newPop;
     }
 
     public function runTurns($num)
     {
         for ($i = 0; $i < $num; $i++) {
             $this->runTurn();
+        }
+        if ($this->record) {
+            $this->makeGif();
         }
     }
 
@@ -86,7 +103,9 @@ class Population
         foreach ($this->members as $member) {
             $member->runTurn();
         }
-        $this->generateImage();
+        if ($this->record) {
+            $this->generateImage();
+        }
         $this->turn++;
     }
 
@@ -103,6 +122,7 @@ class Population
 
     public function makeGif()
     {
+        echo 'generating GIF';
         $multiTIFF = new \Imagick();
 
         $mytifspath = "./tmp/images"; // your image directory
@@ -124,5 +144,12 @@ class Population
 
         //file multi.TIF
         $multiTIFF->writeImages('build/images/gen' . $this->gen . '.gif', true); // combine all image into one single image
+
+        $files = glob('./tmp/images/*'); // get all file names
+        foreach($files as $file){ // iterate files
+          if(is_file($file)) {
+            unlink($file); // delete file
+          }
+        }
     }
 }

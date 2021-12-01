@@ -10,7 +10,7 @@ class Grid
     {
         for ($i = 0; $i < $x; $i++) {
             for ($j = 0; $j < $y; $j++) {
-                $cell = new Cell();
+                $cell = new Cell($i, $j);
                 $this->cells[$i][$j] = $cell;
             }
         }
@@ -165,5 +165,20 @@ class Grid
             }
         }
         return $image;
+    }
+
+    public function getSurvivors($survivorFunction)
+    {
+        $survivors = [];
+        foreach ($this->cells as $column) {
+            foreach ($column as $cell) {
+                if ($cell->getEntity() instanceof Entity
+                    && $survivorFunction($cell)
+                ) {
+                    $survivors[] = $cell->getEntity();
+                }
+            }
+        }
+        return $survivors;
     }
 }

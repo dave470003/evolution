@@ -165,10 +165,22 @@ class Brain
         $toNeurons = array_filter($this->neurons, function($neuron) {
             return $neuron instanceof AbstractToNeuron;
         });
-        foreach ($toNeurons as $neuron) {
-            if ($neuron->getExcitement() > 0.75) {
-                $neuron->fire();
-            }
+        if (count($toNeurons) === 0) {
+            return;
+        }
+        if (count($toNeurons) === 1) {
+            $toNeuron = current($toNeurons);
+        } else {
+            $toNeuron = array_pop($toNeurons);
+            $toNeuron = array_reduce($toNeurons, function ($acc, $neuron) {
+                if ($acc->getExcitement() > $neuron->getExcitement()) {
+                    return $acc;
+                }
+                return $neuron;
+            }, $toNeuron);
+        }
+        if ($toNeuron->getExcitement() > 0.75) {
+            $toNeuron->fire();
         }
     }
 }
