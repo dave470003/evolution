@@ -111,7 +111,6 @@ class Brain
         $neuron = new $className($this);
         $this->neurons[] = $neuron;
         return $neuron;
-
     }
 
     public function addSynapse($fromNeuron, $toNeuron, $weight)
@@ -162,7 +161,7 @@ class Brain
 
     public function triggerNeurons()
     {
-        $toNeurons = array_filter($this->neurons, function($neuron) {
+        $toNeurons = array_filter($this->neurons, function ($neuron) {
             return $neuron instanceof AbstractToNeuron;
         });
         if (count($toNeurons) === 0) {

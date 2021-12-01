@@ -4,6 +4,8 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 
 use App\Population;
 
+srand(1);
+
 $population = new Population(function ($cell) {
     return $cell->getX() < 50;
 });

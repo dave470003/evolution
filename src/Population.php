@@ -53,7 +53,12 @@ class Population
     {
         $this->members = [];
         for ($i = 0; $i < 1000; $i++) {
-            $genome = random_bytes(10);
+            $genome = '';
+            for ($j = 0; $j < 10; $j++) {
+                $byteInt = rand(0, 255);
+                $byte = pack('c', $byteInt);
+                $genome .= $byte;
+            }
             $this->members[] = new Entity($genome, $i);
         }
     }
@@ -117,7 +122,7 @@ class Population
 
         $this->getGrid()->drawEntities($im);
 
-        imagepng($im, './tmp/images/turn' . $this->turn . '.png');
+        imagepng($im, './tmp/images/turn' . str_pad($this->turn, 4, "0", STR_PAD_LEFT) . '.png');
     }
 
     public function makeGif()
@@ -131,8 +136,7 @@ class Population
 
         //print_r($files);
 
-        foreach( $files as $f )
-        {
+        foreach ($files as $f) {
             if ($f === '.' || $f === '..') {
                 continue;
             }
@@ -146,9 +150,9 @@ class Population
         $multiTIFF->writeImages('build/images/gen' . $this->gen . '.gif', true); // combine all image into one single image
 
         $files = glob('./tmp/images/*'); // get all file names
-        foreach($files as $file){ // iterate files
-          if(is_file($file)) {
-            unlink($file); // delete file
+        foreach ($files as $file) { // iterate files
+          if (is_file($file)) {
+              unlink($file); // delete file
           }
         }
     }

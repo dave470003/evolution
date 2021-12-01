@@ -52,6 +52,7 @@ class Grid
                             $this->cells[$x][$y]->setEntity(null);
                             $this->cells[$x+1][$y]->setEntity($entity);
                             $entity->setFacing('E');
+                            return;
                         }
                     }
                 }
@@ -71,6 +72,7 @@ class Grid
                             $this->cells[$x][$y]->setEntity(null);
                             $this->cells[$x-1][$y]->setEntity($entity);
                             $entity->setFacing('W');
+                            return;
                         }
                     }
                 }
@@ -90,6 +92,7 @@ class Grid
                             $this->cells[$x][$y]->setEntity(null);
                             $this->cells[$x][$y+1]->setEntity($entity);
                             $entity->setFacing('N');
+                            return;
                         }
                     }
                 }
@@ -109,6 +112,7 @@ class Grid
                             $this->cells[$x][$y]->setEntity(null);
                             $this->cells[$x][$y-1]->setEntity($entity);
                             $entity->setFacing('S');
+                            return;
                         }
                     }
                 }
@@ -161,6 +165,15 @@ class Grid
                     $blueValue = base_convert(substr($hexValue, 4, 2), 16, 10);
                     $colour = imagecolorallocate($image, $redValue, $greenValue, $blueValue);
                     imagefilledellipse($image, 5 + $x*6, 5 + $y*6, 6, 6, $colour);
+
+                    $black = imagecolorallocate($image, 0, 0, 0);
+                    // The text to draw
+                    $text = $cell->getEntity()->getId();
+                    // Replace path by your own font path
+                    $font = 'arial.ttf';
+                    // Add the text
+
+                    imagestring($image, 5, $x*6, 10 + $y*6, $text, $black);
                 }
             }
         }
