@@ -45,7 +45,7 @@ class Grid
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
                 if ($cell->getEntity() !== null
-                    && $cell->getEntity()->id = $entity->id) {
+                    && $cell->getEntity()->getId() === $entity->getId()) {
                     if ($x < 99) {
                         $eastEntity = $this->cells[$x+1][$y]->getEntity();
                         if ($eastEntity === null) {
@@ -64,7 +64,7 @@ class Grid
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
                 if ($cell->getEntity() !== null
-                    && $cell->getEntity()->id = $entity->id) {
+                    && $cell->getEntity()->getId() === $entity->getId()) {
                     if ($x > 0) {
                         $eastEntity = $this->cells[$x-1][$y]->getEntity();
                         if ($eastEntity === null) {
@@ -83,7 +83,7 @@ class Grid
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
                 if ($cell->getEntity() !== null
-                    && $cell->getEntity()->id = $entity->id) {
+                    && $cell->getEntity()->getId() === $entity->getId()) {
                     if ($y < 99) {
                         $eastEntity = $this->cells[$x][$y+1]->getEntity();
                         if ($eastEntity === null) {
@@ -102,7 +102,7 @@ class Grid
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
                 if ($cell->getEntity() !== null
-                    && $cell->getEntity()->id = $entity->id) {
+                    && $cell->getEntity()->getId() === $entity->getId()) {
                     if ($y > 0) {
                         $eastEntity = $this->cells[$x][$y-1]->getEntity();
                         if ($eastEntity === null) {
@@ -121,7 +121,7 @@ class Grid
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
                 if ($cell->getEntity() !== null
-                    && $cell->getEntity()->id = $entity->id
+                    && $cell->getEntity()->getId() === $entity->getId()
                 ) {
                     switch ($entity->getFacing()) {
                         case 'N':
@@ -148,5 +148,22 @@ class Grid
                 }
             }
         }
+    }
+
+    public function drawEntities($image)
+    {
+        foreach ($this->cells as $x => $column) {
+            foreach ($column as $y => $cell) {
+                if ($cell->getEntity() instanceof Entity) {
+                    $hexValue = $cell->getEntity()->getColour();
+                    $redValue = base_convert(substr($hexValue, 0, 2), 16, 10);
+                    $greenValue = base_convert(substr($hexValue, 2, 2), 16, 10);
+                    $blueValue = base_convert(substr($hexValue, 4, 2), 16, 10);
+                    $colour = imagecolorallocate($image, $redValue, $greenValue, $blueValue);
+                    imagefilledellipse($image, 5 + $x*6, 5 + $y*6, 6, 6, $colour);
+                }
+            }
+        }
+        return $image;
     }
 }

@@ -2,12 +2,14 @@
 
 namespace App;
 
-class MoveSouthNeuron
+use AbstractToNeuron;
+
+class MoveSouthNeuron extends AbstractToNeuron
 {
     public function fire()
     {
         $snapshot = Population::snapshot();
 
-        $snapshot->getGrid()->moveSouth($this->brain->entity);
+        $snapshot->getGrid()->moveSouth($this->brain->getEntity());
     }
 }

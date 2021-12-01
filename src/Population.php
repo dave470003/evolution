@@ -10,6 +10,7 @@ class Population
     protected $members;
     protected $grid;
     protected $gen;
+    protected $turn;
 
     public function __construct()
     {
@@ -35,15 +36,21 @@ class Population
 
     public function nextGen()
     {
+        $this->makeGif();
         $this->breedMembers();
         $this->initializeGrid($this->members);
         $this->gen++;
+
+        return $this;
     }
 
     public function initializePopulation()
     {
-        // generate random;
         $this->members = [];
+        for ($i = 0; $i < 1000; $i++) {
+            $genome = random_bytes(10);
+            $this->members[] = new Entity($genome, $i);
+        }
     }
 
     public function initializeGrid($members)
@@ -65,5 +72,57 @@ class Population
     {
         // breed survivors
         $this->members = [];
+    }
+
+    public function runTurns($num)
+    {
+        for ($i = 0; $i < $num; $i++) {
+            $this->runTurn();
+        }
+    }
+
+    public function runTurn()
+    {
+        foreach ($this->members as $member) {
+            $member->runTurn();
+        }
+        $this->generateImage();
+        $this->turn++;
+    }
+
+    public function generateImage()
+    {
+        $im = imagecreatetruecolor(605, 605);
+        $white = imagecolorallocate($im, 255, 255, 255);
+        imagefilledrectangle($im, 4, 4, 600, 600, $white);
+
+        $this->getGrid()->drawEntities($im);
+
+        imagepng($im, './tmp/images/turn' . $this->turn . '.png');
+    }
+
+    public function makeGif()
+    {
+        $multiTIFF = new \Imagick();
+
+        $mytifspath = "./tmp/images"; // your image directory
+
+        $files = scandir($mytifspath);
+
+        //print_r($files);
+
+        foreach( $files as $f )
+        {
+            if ($f === '.' || $f === '..') {
+                continue;
+            }
+            $auxIMG = new \Imagick();
+            $auxIMG->readImage($mytifspath."/".$f);
+
+            $multiTIFF->addImage($auxIMG);
+        }
+
+        //file multi.TIF
+        $multiTIFF->writeImages('build/images/gen' . $this->gen . '.gif', true); // combine all image into one single image
     }
 }

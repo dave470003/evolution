@@ -7,5 +7,11 @@
             "email": "djwfox@gmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload": {
+        "classmap": [
+            "src/",
+            "scripts/"
+        ]
+    }
 }
