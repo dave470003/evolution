@@ -1,0 +1,11 @@
+{
+    "name": "davidfox/evolution",
+    "type": "project",
+    "authors": [
+        {
+            "name": "David Fox",
+            "email": "djwfox@gmail.com"
+        }
+    ],
+    "require": {}
+}
