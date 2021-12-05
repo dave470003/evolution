@@ -38,12 +38,18 @@ class Population
         return static::$snapshot;
     }
 
+    public static function clearSnapshot()
+    {
+        static::$snapshot = null;
+    }
+
     public function nextGen($record)
     {
         $this->record = $record;
 
         $this->breedMembers();
         $this->initializeGrid($this->members);
+        $this->clearSnapshot();
         $this->gen++;
         $this->turn = 0;
 
@@ -53,11 +59,11 @@ class Population
     public function initializePopulation()
     {
         $this->members = [];
-        for ($i = 0; $i < 1000; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $genome = '';
             for ($j = 0; $j < 10; $j++) {
                 $byteInt = rand(0, 255);
-                $byte = base_convert($byteInt, 10, 16);
+                $byte = str_pad(base_convert($byteInt, 10, 16), 2, "0", STR_PAD_LEFT);
                 $genome .= $byte;
             }
             $this->members[] = new Entity($genome, $i);
@@ -84,7 +90,7 @@ class Population
         $survivors = $this->grid->getSurvivors($this->survivorFunction);
         $newPop = [];
         $i = 0;
-        while (count($newPop) < 1000) {
+        while (count($newPop) < 100) {
             $survivorKeys = array_rand($survivors, 2);
             $baby = $survivors[$survivorKeys[0]]->breed($survivors[$survivorKeys[1]], $i);
             $newPop[] = $baby;

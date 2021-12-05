@@ -78,8 +78,6 @@ class Entity
             }
         }
 
-        var_dump($this->getChromosomes());
-
         $babyGenome = implode($babyChromosomes);
         $babyGenome = $this->mutateGenome($babyGenome);
 
@@ -88,20 +86,20 @@ class Entity
 
     public static function mutateGenome($genome)
     {
-        // var_dump($genome);
         $chromosomes = str_split($genome, 4);
         foreach ($chromosomes as &$chromosome) {
             $binary = base_convert($chromosome, 16, 2);
             $binaryArray = str_split($binary);
 
             foreach ($binaryArray as &$bin) {
-                if (rand(0, 10) === 0) {
-                    $bin = ~$bin;
+                if (rand(0, 1000) === 0) {
+                    $bin = (($bin === 1) ? 0 : 1);
                 }
             }
 
             $binary = implode($binaryArray);
             $chromosome = base_convert($binary, 2, 16);
+            $chromosome = str_pad($chromosome, 4, "0", STR_PAD_LEFT);
         }
         return implode('', $chromosomes);
     }

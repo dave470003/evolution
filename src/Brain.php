@@ -25,7 +25,7 @@ class Brain
             $toId = (int) base_convert(substr($binary, 13, 3), 2, 10);
 
             if ($fromType === 0) {
-                switch ($fromId) {
+                switch ($fromId % 3) {
                     case 0:
                         $fromNeuron = $brain->getByClass(IsFacingEntityNeuron::class);
                         break;
@@ -51,7 +51,7 @@ class Brain
             }
 
             if ($toType === 0) {
-                switch ($toId) {
+                switch ($toId % 5) {
                     case 0:
                         $toNeuron = $brain->getByClass(MoveEastNeuron::class);
                         break;
@@ -77,11 +77,7 @@ class Brain
                         break;
                 }
             } else {
-                if ($toId < 4) {
-                    $toNeuron = $brain->getInternalNeuronById($toId);
-                } else {
-                    $toNeuron = null;
-                }
+                $toNeuron = $brain->getInternalNeuronById($toId % 4);
             }
 
             if ($fromNeuron !== null && $toNeuron !== null) {
