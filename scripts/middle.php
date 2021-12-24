@@ -4,13 +4,15 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 
 use App\Population;
 
-srand(3);
+srand(4);
 
 $population = new Population(
     100,
     30,
     function ($cell) {
-        return $cell->getX() < 15;
+        return ($cell->getX() - 15) ^ 2
+            + ($cell->getY() - 15) ^ 2
+            < 225;
     }
 );
 for ($i = 0; $i < 100; $i++) {

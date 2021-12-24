@@ -5,9 +5,14 @@ namespace App;
 class Grid
 {
     protected $cells;
+    protected $xSize;
+    protected $ySize;
 
     public function __construct($members, $x = 30, $y = 30)
     {
+        $this->xSize = $x;
+        $this->ySize = $y;
+
         for ($i = 0; $i < $x; $i++) {
             for ($j = 0; $j < $y; $j++) {
                 $cell = new Cell($i, $j);
@@ -22,8 +27,8 @@ class Grid
     {
         $membersToPopulate = $members;
         while (count($membersToPopulate) > 0) {
-            $x = rand(0, 29);
-            $y = rand(0, 29);
+            $x = rand(0, $this->xSize - 1);
+            $y = rand(0, $this->ySize - 1);
             if ($this->cells[$x][$y]->getEntity() === null) {
                 $entity = array_pop($membersToPopulate);
                 $this->cells[$x][$y]->setEntity($entity);
@@ -46,7 +51,7 @@ class Grid
             foreach ($column as  $y => $cell) {
                 if ($cell->getEntity() !== null
                     && $cell->getEntity()->getId() === $entity->getId()) {
-                    if ($x < 29) {
+                    if ($x < $this->xSize - 1) {
                         $eastEntity = $this->cells[$x+1][$y]->getEntity();
                         if ($eastEntity === null) {
                             $this->cells[$x][$y]->setEntity(null);
@@ -86,7 +91,7 @@ class Grid
             foreach ($column as  $y => $cell) {
                 if ($cell->getEntity() !== null
                     && $cell->getEntity()->getId() === $entity->getId()) {
-                    if ($y < 29) {
+                    if ($y < $this->ySize - 1) {
                         $eastEntity = $this->cells[$x][$y+1]->getEntity();
                         if ($eastEntity === null) {
                             $this->cells[$x][$y]->setEntity(null);
@@ -129,7 +134,7 @@ class Grid
                 ) {
                     switch ($entity->getFacing()) {
                         case 'N':
-                            if ($y === 29) {
+                            if ($y === $this->ySize - 1) {
                                 return 'wall';
                             }
                             return $this->cells[$x][$y+1];
@@ -139,7 +144,7 @@ class Grid
                             }
                             return $this->cells[$x][$y-1];
                         case 'E':
-                            if ($x === 29) {
+                            if ($x === $this->xSize - 1) {
                                 return 'wall';
                             }
                             return $this->cells[$x+1][$y];
@@ -164,7 +169,7 @@ class Grid
                     $greenValue = base_convert(substr($hexValue, 2, 2), 16, 10);
                     $blueValue = base_convert(substr($hexValue, 4, 2), 16, 10);
                     $colour = imagecolorallocate($image, $redValue, $greenValue, $blueValue);
-                    imagefilledellipse($image, 5 + $x*20, 5 + $y*20, 20, 20, $colour);
+                    imagefilledellipse($image, 10 + $x*(600 / $this->xSize), 10 + $y*(600 / $this->ySize), 20, 20, $colour);
 
                     // $black = imagecolorallocate($image, 0, 0, 0);
                     // // The text to draw

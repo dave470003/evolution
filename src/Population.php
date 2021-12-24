@@ -13,16 +13,20 @@ class Population
     protected $turn;
     protected $record;
     protected $survivorFunction;
+    protected $populationSize;
+    protected $gridSize;
 
-    public function __construct($survivorFunction)
+    public function __construct($populationSize, $gridSize, $survivorFunction)
     {
         static::$instance = $this;
         $this->turn = 0;
         $this->gen = 0;
         $this->record = true;
         $this->survivorFunction = $survivorFunction;
+        $this->populationSize = $populationSize;
+        $this->gridSize = $gridSize;
         $this->initializePopulation();
-        $this->initializeGrid($this->members);
+        $this->initializeGrid($gridSize, $this->members);
     }
 
     public static function instance()
@@ -48,7 +52,7 @@ class Population
         $this->record = $record;
 
         $this->breedMembers();
-        $this->initializeGrid($this->members);
+        $this->initializeGrid($this->gridSize, $this->members);
         $this->clearSnapshot();
         $this->gen++;
         $this->turn = 0;
@@ -59,7 +63,7 @@ class Population
     public function initializePopulation()
     {
         $this->members = [];
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < $this->populationSize; $i++) {
             $genome = '';
             for ($j = 0; $j < 10; $j++) {
                 $byteInt = rand(0, 255);
@@ -70,9 +74,9 @@ class Population
         }
     }
 
-    public function initializeGrid($members)
+    public function initializeGrid($gridSize, $members)
     {
-        $this->grid = new Grid($members);
+        $this->grid = new Grid($members, $gridSize, $gridSize);
     }
 
     public function getMembers()
@@ -90,7 +94,7 @@ class Population
         $survivors = $this->grid->getSurvivors($this->survivorFunction);
         $newPop = [];
         $i = 0;
-        while (count($newPop) < 100) {
+        while (count($newPop) < $this->populationSize) {
             $survivorKeys = array_rand($survivors, 2);
             $baby = $survivors[$survivorKeys[0]]->breed($survivors[$survivorKeys[1]], $i);
             $newPop[] = $baby;

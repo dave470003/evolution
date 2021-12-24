@@ -10,7 +10,8 @@ $population = new Population(
     100,
     30,
     function ($cell) {
-        return $cell->getX() < 15;
+        return $cell->getX() < 15
+            && $cell->getY() < 15;
     }
 );
 for ($i = 0; $i < 100; $i++) {
