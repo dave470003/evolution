@@ -85,6 +85,8 @@ class Brain
             }
         }
 
+        $brain->simplify();
+
         return $brain;
     }
 
@@ -93,6 +95,30 @@ class Brain
         for ($i = 0; $i < $internalNeurons; $i++) {
             $this->neurons[] = new InternalNeuron($this, $i);
         }
+    }
+
+    public function simplify()
+    {
+        $neurons = [];
+        foreach ($this->neurons as $neuron) {
+            if (count($neuron->getFromSynapses()) > 0 && ($neuron instanceof AbstractToNeuron)) {
+                $neurons = $this->addRecursiveFromNeurons($neurons, $neuron);
+            }
+        }
+        $this->neurons = $neurons;
+    }
+
+    public function addRecursiveFromNeurons($neurons, $neuron = null)
+    {
+        if (in_array($neuron, $neurons)) {
+            return $neurons;
+        }
+        $neurons[] = $neuron;
+        foreach ($neuron->getFromSynapses() as $synapse) {
+            $neurons = $this->addRecursiveFromNeurons($neurons, $synapse['neuron']);
+        }
+
+        return $neurons;
     }
 
     public function getByClass($className)
@@ -141,14 +167,21 @@ class Brain
 
     public function runTurn()
     {
-        for ($i = 0; $i < 10; $i++) {
-            $this->calculateExcitement();
-        }
+        // for ($i = 0; $i < 1; $i++) {
+        // echo 'calculating excitement';
+        // echo microtime() . PHP_EOL;
+        $this->calculateExcitement();
+        // }
+        // echo 'before trigger neurons';
+        // echo microtime() . PHP_EOL;
         $this->triggerNeurons();
+        // echo 'after trigger neurons';
+        // echo microtime() . PHP_EOL;
     }
 
     public function calculateExcitement()
     {
+        // return;
         foreach ($this->neurons as $neuron) {
             $neuron->calculateExcitement();
         }

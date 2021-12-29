@@ -49,6 +49,8 @@ class Population
 
     public function nextGen($record)
     {
+        // echo 'beforeNextGen' . PHP_EOL;
+        // echo microtime() . PHP_EOL;
         $this->record = $record;
 
         $this->breedMembers();
@@ -56,6 +58,8 @@ class Population
         $this->clearSnapshot();
         $this->gen++;
         $this->turn = 0;
+        // echo 'afterNextGen' . PHP_EOL;
+        // echo microtime() . PHP_EOL;
 
         return $this;
     }
@@ -91,6 +95,7 @@ class Population
 
     public function breedMembers()
     {
+        // $t = microtime();
         $survivors = $this->grid->getSurvivors($this->survivorFunction);
         $newPop = [];
         $i = 0;
@@ -100,14 +105,18 @@ class Population
             $newPop[] = $baby;
             $i++;
         }
+        // echo 'breeding members took: ' . microtime() - $t . PHP_EOL;
 
         $this->members = $newPop;
     }
 
     public function runTurns($num)
     {
+        // $t = microtime(true);
         for ($i = 0; $i < $num; $i++) {
             $this->runTurn();
+            // echo 'time turn taken: ' . (microtime(true) - $t) . PHP_EOL;
+            // $t = microtime(true);
         }
         if ($this->record) {
             $this->makeGif();
@@ -116,8 +125,11 @@ class Population
 
     public function runTurn()
     {
+        // $t = microtime(true);
         foreach ($this->members as $member) {
             $member->runTurn();
+            // echo('time member turn taken: ' . (microtime(true) - $t) . PHP_EOL);
+            // $t = microtime();
         }
         if ($this->record) {
             $this->generateImage();
@@ -127,6 +139,8 @@ class Population
 
     public function generateImage()
     {
+        // echo 'generating image';
+        // echo microtime() . PHP_EOL;
         $im = imagecreatetruecolor(605, 605);
         $white = imagecolorallocate($im, 255, 255, 255);
         imagefilledrectangle($im, 4, 4, 600, 600, $white);
@@ -138,14 +152,15 @@ class Population
 
     public function makeGif()
     {
-        echo 'generating GIF';
+        // echo microtime() . PHP_EOL;
+        echo 'generating GIF' . PHP_EOL;
         $multiTIFF = new \Imagick();
 
         $mytifspath = "./tmp/images"; // your image directory
 
         $files = scandir($mytifspath);
 
-        //print_r($files);
+        // print_r($files);
 
         foreach ($files as $f) {
             if ($f === '.' || $f === '..') {

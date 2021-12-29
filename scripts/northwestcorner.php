@@ -14,8 +14,17 @@ $population = new Population(
             && $cell->getY() < 15;
     }
 );
-for ($i = 0; $i < 100; $i++) {
+for ($i = 0; $i < 500; $i++) {
     echo 'gen ' . $i . "\n";
     $population->runTurns(200);
-    $population = $population->nextGen(in_array($i, [1, 2, 10, 23, 30, 40, 50, 60, 70, 80, 90, 100, 997]));
+    $j = $i;
+    $record = false;
+    do {
+        $remainder = $j%10;
+        $j = floor($j/10);
+    } while ($remainder === 0 && $j > 10);
+    if ($remainder === 0) {
+        $record = true;
+    }
+    $population = $population->nextGen($record);
 }

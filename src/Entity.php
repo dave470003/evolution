@@ -8,12 +8,14 @@ class Entity
     protected $brain;
     protected $facing;
     protected $id;
+    protected $isFed;
 
     public function __construct($genome, $id)
     {
         $this->genome = $genome;
         $this->brain = Brain::fromGenome($genome, $this);
         $this->id = $id;
+        $this->isFed = false;
     }
 
     public function __clone()
@@ -24,6 +26,11 @@ class Entity
     public function getId()
     {
         return $this->id;
+    }
+
+    public function isFed()
+    {
+        return $this->isFed;
     }
 
     public function setFacing($facing)
@@ -38,6 +45,8 @@ class Entity
 
     public function runTurn()
     {
+        // echo 'running member turn';
+        // echo microtime() . PHP_EOL;
         $this->brain->runTurn();
     }
 
@@ -92,7 +101,7 @@ class Entity
             $binaryArray = str_split($binary);
 
             foreach ($binaryArray as &$bin) {
-                if (rand(0, 1000) === 0) {
+                if (rand(0, 200) === 0) {
                     $bin = (($bin === 1) ? 0 : 1);
                 }
             }

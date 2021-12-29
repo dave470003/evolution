@@ -21,6 +21,7 @@ class Grid
         }
 
         $this->seed($members);
+        $this->seedFood(100);
     }
 
     public function seed($members)
@@ -32,6 +33,32 @@ class Grid
             if ($this->cells[$x][$y]->getEntity() === null) {
                 $entity = array_pop($membersToPopulate);
                 $this->cells[$x][$y]->setEntity($entity);
+            }
+        }
+    }
+
+    public function seedFood($quantity)
+    {
+        for ($i = 0; $i < $quantity; $i++) {
+            $x = rand(0, $this->xSize - 1);
+            $y = rand(0, $this->ySize - 1);
+            if ($this->cells[$x][$y]->hasFood() === false) {
+                $this->cells[$x][$y]->addFood();
+            }
+        }
+        foreach ($this->cells as $x => $column) {
+            foreach ($column as  $y => $cell) {
+                if ($cell->hasFood()) {
+                    for ($i = $x - 3; $i < $x + 4; $i++) {
+                        for ($j = $x - 3; $j < $x + 4; $j++) {
+                            $foodAroma = max(0, (3 - sqrt((pow($x - $i, 2)) + (pow($y - $j, 2)))));
+                            // var_dump($foodAroma);
+                            if (isset($this->cells[$i]) && isset($this->cells[$i][$j])) {
+                                $this->cells[$i][$j]->addAroma($foodAroma);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -163,13 +190,20 @@ class Grid
     {
         foreach ($this->cells as $x => $column) {
             foreach ($column as $y => $cell) {
+                $redAmount = (int) floor(125 * ($cell->getFoodAroma() / 15));
+                // var_dump($cell->getFoodAroma());
+                // var_dump($redAmount);
+                $colour = imagecolorallocate($image, 255, 255 - $redAmount, 255 - $redAmount);
+                imagelayereffect($image, IMG_EFFECT_REPLACE);
+                imagefilledrectangle($image, $x*(600 / $this->xSize), $y*(600 / $this->ySize), 600 / $this->ySize, 600 / $this->ySize, $colour);
                 if ($cell->getEntity() instanceof Entity) {
                     $hexValue = $cell->getEntity()->getColour();
                     $redValue = base_convert(substr($hexValue, 0, 2), 16, 10);
                     $greenValue = base_convert(substr($hexValue, 2, 2), 16, 10);
                     $blueValue = base_convert(substr($hexValue, 4, 2), 16, 10);
                     $colour = imagecolorallocate($image, $redValue, $greenValue, $blueValue);
-                    imagefilledellipse($image, 10 + $x*(600 / $this->xSize), 10 + $y*(600 / $this->ySize), 20, 20, $colour);
+                    imagelayereffect($image, IMG_EFFECT_REPLACE);
+                    imagefilledellipse($image, (300 / $this->ySize) + $x*(600 / $this->xSize), (300 / $this->ySize) + $y*(600 / $this->ySize), 600 / $this->ySize, 600 / $this->ySize, $colour);
 
                     // $black = imagecolorallocate($image, 0, 0, 0);
                     // // The text to draw
@@ -179,6 +213,11 @@ class Grid
                     // // Add the text
 
                     // imagestring($image, 5, $x*6, 10 + $y*6, $text, $black);
+                }
+                if ($cell->hasFood()) {
+                    $colour = imagecolorallocate($image, 0, 0, 0);
+                    imagelayereffect($image, IMG_EFFECT_REPLACE);
+                    imagefilledellipse($image, (300 / $this->ySize) + $x*(600 / $this->xSize), (300 / $this->ySize) + $y*(600 / $this->ySize), 3, 3, $colour);
                 }
             }
         }

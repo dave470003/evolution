@@ -30,6 +30,16 @@ abstract class AbstractNeuron
         ];
     }
 
+    public function getToSynapses()
+    {
+        return $this->toSynapses;
+    }
+
+    public function getFromSynapses()
+    {
+        return $this->fromSynapses;
+    }
+
     public function getExcitement()
     {
         return $this->excitement;

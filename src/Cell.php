@@ -7,6 +7,8 @@ class Cell
     protected $entity;
     protected $x;
     protected $y;
+    protected $food;
+    protected $foodAroma = 0;
 
     public function __construct($x, $y)
     {
@@ -22,6 +24,26 @@ class Cell
     public function getEntity()
     {
         return $this->entity;
+    }
+
+    public function hasFood()
+    {
+        return $this->food === true;
+    }
+
+    public function addFood()
+    {
+        $this->food = true;
+    }
+
+    public function addAroma($aroma)
+    {
+        $this->foodAroma += $aroma;
+    }
+
+    public function getFoodAroma()
+    {
+        return $this->foodAroma;
     }
 
     public function clone()
