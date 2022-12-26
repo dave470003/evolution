@@ -7,6 +7,7 @@ class Cell
     protected $entity;
     protected $x;
     protected $y;
+    protected $density;
 
     public function __construct($x, $y)
     {
@@ -37,5 +38,15 @@ class Cell
     public function getY()
     {
         return $this->y;
+    }
+
+    public function setDensity($density)
+    {
+        $this->density = $density;
+    }
+
+    public function getDensity()
+    {
+        return $this->density;
     }
 }

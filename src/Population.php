@@ -70,6 +70,8 @@ class Population
                 $byte = str_pad(base_convert($byteInt, 10, 16), 2, "0", STR_PAD_LEFT);
                 $genome .= $byte;
             }
+
+            // $genome = "ff21ff21ff12ff12";
             $this->members[] = new Entity($genome, $i);
         }
     }
@@ -116,6 +118,8 @@ class Population
 
     public function runTurn()
     {
+        $this->grid->populateDensity();
+
         foreach ($this->members as $member) {
             $member->runTurn();
         }

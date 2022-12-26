@@ -39,6 +39,6 @@ abstract class AbstractNeuron
     {
         $this->excitement = tanh(array_reduce($this->fromSynapses, function ($acc, $synapse) {
             return $acc + ($synapse['weight'] * $synapse['neuron']->getExcitement());
-        }));
+        }, 0) / 250);
     }
 }

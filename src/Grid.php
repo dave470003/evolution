@@ -45,6 +45,36 @@ class Grid
         }, $this->neurons);
     }
 
+    public function populateDensity()
+    {
+        foreach ($this->cells as $x => $column) {
+            foreach ($column as  $y => $cell) {
+                $cell->setDensity($this->calculateDensity($cell));
+            }
+        }
+    }
+
+    public function calculateDensity($cell)
+    {
+        $cellsEmpty = 0;
+        $cellsFull = 0;
+        for ($i = $cell->getX() - 2; $i <= $cell->getX() + 2; $i++) {
+            for ($j = $cell->getY() - 2; $j <= $cell->getY() + 2; $j++) {
+                if ($i === $cell->getX() && $j === $cell->getY()) {
+                    continue;
+                }
+                if (isset($this->cells[$i]) && isset($this->cells[$j])) {
+                    if ($this->cells[$i][$j]->getEntity() instanceof Entity) {
+                        $cellsFull += 1;
+                    } else {
+                        $cellsEmpty += 1;
+                    }
+                }
+            }
+        }
+        return $cellsFull / ($cellsEmpty + $cellsFull);
+    }
+
     public function moveEast($entity)
     {
         foreach ($this->cells as $x => $column) {
@@ -105,6 +135,24 @@ class Grid
         }
     }
 
+    public function moveForward($entity)
+    {
+        switch ($entity->getFacing()) {
+            case 'N':
+                $this->moveNorth($entity);
+                break;
+            case 'S':
+                $this->moveSouth($entity);
+                break;
+            case 'W':
+                $this->moveWest($entity);
+                break;
+            case 'E':
+                $this->moveEast($entity);
+                break;
+        }
+    }
+
     public function moveSouth($entity)
     {
         foreach ($this->cells as $x => $column) {
@@ -153,6 +201,123 @@ class Grid
                                 return 'wall';
                             }
                             return $this->cells[$x-1][$y];
+                    }
+                }
+            }
+        }
+    }
+
+    public function isWallNearby($entity)
+    {
+        foreach ($this->cells as $x => $column) {
+            foreach ($column as  $y => $cell) {
+                if ($cell->getEntity() !== null
+                    && $cell->getEntity()->getId() === $entity->getId()
+                ) {
+                    return $cell->getX() === 0
+                        || $cell->getY() === 0
+                        || $cell->getX() === $this->xSize - 1
+                        || $cell->getY() === $this->ySize - 1;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function getDensity($entity)
+    {
+        foreach ($this->cells as $x => $column) {
+            foreach ($column as  $y => $cell) {
+                if ($cell->getEntity() !== null
+                    && $cell->getEntity()->getId() === $entity->getId()
+                ) {
+                    return $cell->getDensity();
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    public function moveTowardsDensity($entity)
+    {
+        foreach ($this->cells as $x => $column) {
+            foreach ($column as  $y => $cell) {
+                if ($cell->getEntity() !== null
+                    && $cell->getEntity()->getId() === $entity->getId()
+                ) {
+                    $densities = [];
+                    if (isset($this->cells[$x+1]) && isset($this->cells[$x+1][$y])) {
+                        $densities['E'] = $this->cells[$x+1][$y]->getDensity();
+                    }
+                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y+1])) {
+                        $densities['S'] = $this->cells[$x][$y+1]->getDensity();
+                    }
+                    if (isset($this->cells[$x-1]) && isset($this->cells[$x-1][$y])) {
+                        $densities['W'] = $this->cells[$x-1][$y]->getDensity();
+                    }
+                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y-1])) {
+                        $densities['N'] = $this->cells[$x][$y-1]->getDensity();
+                    }
+                    arsort($densities);
+                    $targetDir = array_key_first($densities);
+
+                    switch ($targetDir) {
+                        case 'N':
+                            $this->moveNorth($entity);
+                            break;
+                        case 'S':
+                            $this->moveSouth($entity);
+                            break;
+                        case 'W':
+                            $this->moveWest($entity);
+                            break;
+                        case 'E':
+                            $this->moveEast($entity);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    public function moveFromDensity($entity)
+    {
+        foreach ($this->cells as $x => $column) {
+            foreach ($column as  $y => $cell) {
+                if ($cell->getEntity() !== null
+                    && $cell->getEntity()->getId() === $entity->getId()
+                ) {
+                    $densities = [];
+                    if (isset($this->cells[$x+1]) && isset($this->cells[$x+1][$y])) {
+                        $densities['E'] = $this->cells[$x+1][$y]->getDensity();
+                    }
+                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y+1])) {
+                        $densities['S'] = $this->cells[$x][$y+1]->getDensity();
+                    }
+                    if (isset($this->cells[$x-1]) && isset($this->cells[$x-1][$y])) {
+                        $densities['W'] = $this->cells[$x-1][$y]->getDensity();
+                    }
+                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y-1])) {
+                        $densities['N'] = $this->cells[$x][$y-1]->getDensity();
+                    }
+                    asort($densities);
+                    $targetDir = array_key_first($densities);
+
+                    switch ($targetDir) {
+                        case 'N':
+                            $this->moveNorth($entity);
+                            break;
+                        case 'S':
+                            $this->moveSouth($entity);
+                            break;
+                        case 'W':
+                            $this->moveWest($entity);
+                            break;
+                        case 'E':
+                            $this->moveEast($entity);
+                            break;
                     }
                 }
             }
