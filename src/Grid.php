@@ -58,8 +58,8 @@ class Grid
     {
         $cellsEmpty = 0;
         $cellsFull = 0;
-        for ($i = $cell->getX() - 2; $i <= $cell->getX() + 2; $i++) {
-            for ($j = $cell->getY() - 2; $j <= $cell->getY() + 2; $j++) {
+        for ($i = $cell->getX() - 5; $i <= $cell->getX() + 5; $i++) {
+            for ($j = $cell->getY() - 5; $j <= $cell->getY() + 5; $j++) {
                 if ($i === $cell->getX() && $j === $cell->getY()) {
                     continue;
                 }
@@ -79,13 +79,15 @@ class Grid
     {
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
-                if ($cell->getEntity() !== null
-                    && $cell->getEntity()->getId() === $entity->getId()) {
+                if (
+                    $cell->getEntity() !== null
+                    && $cell->getEntity()->getId() === $entity->getId()
+                ) {
                     if ($x < $this->xSize - 1) {
-                        $eastEntity = $this->cells[$x+1][$y]->getEntity();
+                        $eastEntity = $this->cells[$x + 1][$y]->getEntity();
                         if ($eastEntity === null) {
                             $this->cells[$x][$y]->setEntity(null);
-                            $this->cells[$x+1][$y]->setEntity($entity);
+                            $this->cells[$x + 1][$y]->setEntity($entity);
                             $entity->setFacing('E');
                             return;
                         }
@@ -99,13 +101,15 @@ class Grid
     {
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
-                if ($cell->getEntity() !== null
-                    && $cell->getEntity()->getId() === $entity->getId()) {
+                if (
+                    $cell->getEntity() !== null
+                    && $cell->getEntity()->getId() === $entity->getId()
+                ) {
                     if ($x > 0) {
-                        $eastEntity = $this->cells[$x-1][$y]->getEntity();
+                        $eastEntity = $this->cells[$x - 1][$y]->getEntity();
                         if ($eastEntity === null) {
                             $this->cells[$x][$y]->setEntity(null);
-                            $this->cells[$x-1][$y]->setEntity($entity);
+                            $this->cells[$x - 1][$y]->setEntity($entity);
                             $entity->setFacing('W');
                             return;
                         }
@@ -119,13 +123,15 @@ class Grid
     {
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
-                if ($cell->getEntity() !== null
-                    && $cell->getEntity()->getId() === $entity->getId()) {
+                if (
+                    $cell->getEntity() !== null
+                    && $cell->getEntity()->getId() === $entity->getId()
+                ) {
                     if ($y < $this->ySize - 1) {
-                        $eastEntity = $this->cells[$x][$y+1]->getEntity();
+                        $eastEntity = $this->cells[$x][$y + 1]->getEntity();
                         if ($eastEntity === null) {
                             $this->cells[$x][$y]->setEntity(null);
-                            $this->cells[$x][$y+1]->setEntity($entity);
+                            $this->cells[$x][$y + 1]->setEntity($entity);
                             $entity->setFacing('N');
                             return;
                         }
@@ -157,13 +163,15 @@ class Grid
     {
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
-                if ($cell->getEntity() !== null
-                    && $cell->getEntity()->getId() === $entity->getId()) {
+                if (
+                    $cell->getEntity() !== null
+                    && $cell->getEntity()->getId() === $entity->getId()
+                ) {
                     if ($y > 0) {
-                        $eastEntity = $this->cells[$x][$y-1]->getEntity();
+                        $eastEntity = $this->cells[$x][$y - 1]->getEntity();
                         if ($eastEntity === null) {
                             $this->cells[$x][$y]->setEntity(null);
-                            $this->cells[$x][$y-1]->setEntity($entity);
+                            $this->cells[$x][$y - 1]->setEntity($entity);
                             $entity->setFacing('S');
                             return;
                         }
@@ -177,7 +185,8 @@ class Grid
     {
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
-                if ($cell->getEntity() !== null
+                if (
+                    $cell->getEntity() !== null
                     && $cell->getEntity()->getId() === $entity->getId()
                 ) {
                     switch ($entity->getFacing()) {
@@ -185,22 +194,22 @@ class Grid
                             if ($y === $this->ySize - 1) {
                                 return 'wall';
                             }
-                            return $this->cells[$x][$y+1];
+                            return $this->cells[$x][$y + 1];
                         case 'S':
                             if ($y === 0) {
                                 return 'wall';
                             }
-                            return $this->cells[$x][$y-1];
+                            return $this->cells[$x][$y - 1];
                         case 'E':
                             if ($x === $this->xSize - 1) {
                                 return 'wall';
                             }
-                            return $this->cells[$x+1][$y];
+                            return $this->cells[$x + 1][$y];
                         case 'W':
                             if ($x === 0) {
                                 return 'wall';
                             }
-                            return $this->cells[$x-1][$y];
+                            return $this->cells[$x - 1][$y];
                     }
                 }
             }
@@ -211,7 +220,8 @@ class Grid
     {
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
-                if ($cell->getEntity() !== null
+                if (
+                    $cell->getEntity() !== null
                     && $cell->getEntity()->getId() === $entity->getId()
                 ) {
                     return $cell->getX() === 0
@@ -229,7 +239,8 @@ class Grid
     {
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
-                if ($cell->getEntity() !== null
+                if (
+                    $cell->getEntity() !== null
                     && $cell->getEntity()->getId() === $entity->getId()
                 ) {
                     return $cell->getDensity();
@@ -244,21 +255,22 @@ class Grid
     {
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
-                if ($cell->getEntity() !== null
+                if (
+                    $cell->getEntity() !== null
                     && $cell->getEntity()->getId() === $entity->getId()
                 ) {
                     $densities = [];
-                    if (isset($this->cells[$x+1]) && isset($this->cells[$x+1][$y])) {
-                        $densities['E'] = $this->cells[$x+1][$y]->getDensity();
+                    if (isset($this->cells[$x + 1]) && isset($this->cells[$x + 1][$y])) {
+                        $densities['E'] = $this->cells[$x + 1][$y]->getDensity();
                     }
-                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y+1])) {
-                        $densities['S'] = $this->cells[$x][$y+1]->getDensity();
+                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y + 1])) {
+                        $densities['S'] = $this->cells[$x][$y + 1]->getDensity();
                     }
-                    if (isset($this->cells[$x-1]) && isset($this->cells[$x-1][$y])) {
-                        $densities['W'] = $this->cells[$x-1][$y]->getDensity();
+                    if (isset($this->cells[$x - 1]) && isset($this->cells[$x - 1][$y])) {
+                        $densities['W'] = $this->cells[$x - 1][$y]->getDensity();
                     }
-                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y-1])) {
-                        $densities['N'] = $this->cells[$x][$y-1]->getDensity();
+                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y - 1])) {
+                        $densities['N'] = $this->cells[$x][$y - 1]->getDensity();
                     }
                     arsort($densities);
                     $targetDir = array_key_first($densities);
@@ -286,21 +298,22 @@ class Grid
     {
         foreach ($this->cells as $x => $column) {
             foreach ($column as  $y => $cell) {
-                if ($cell->getEntity() !== null
+                if (
+                    $cell->getEntity() !== null
                     && $cell->getEntity()->getId() === $entity->getId()
                 ) {
                     $densities = [];
-                    if (isset($this->cells[$x+1]) && isset($this->cells[$x+1][$y])) {
-                        $densities['E'] = $this->cells[$x+1][$y]->getDensity();
+                    if (isset($this->cells[$x + 1]) && isset($this->cells[$x + 1][$y])) {
+                        $densities['E'] = $this->cells[$x + 1][$y]->getDensity();
                     }
-                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y+1])) {
-                        $densities['S'] = $this->cells[$x][$y+1]->getDensity();
+                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y + 1])) {
+                        $densities['S'] = $this->cells[$x][$y + 1]->getDensity();
                     }
-                    if (isset($this->cells[$x-1]) && isset($this->cells[$x-1][$y])) {
-                        $densities['W'] = $this->cells[$x-1][$y]->getDensity();
+                    if (isset($this->cells[$x - 1]) && isset($this->cells[$x - 1][$y])) {
+                        $densities['W'] = $this->cells[$x - 1][$y]->getDensity();
                     }
-                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y-1])) {
-                        $densities['N'] = $this->cells[$x][$y-1]->getDensity();
+                    if (isset($this->cells[$x]) && isset($this->cells[$x][$y - 1])) {
+                        $densities['N'] = $this->cells[$x][$y - 1]->getDensity();
                     }
                     asort($densities);
                     $targetDir = array_key_first($densities);
@@ -334,7 +347,7 @@ class Grid
                     $greenValue = base_convert(substr($hexValue, 2, 2), 16, 10);
                     $blueValue = base_convert(substr($hexValue, 4, 2), 16, 10);
                     $colour = imagecolorallocate($image, $redValue, $greenValue, $blueValue);
-                    imagefilledellipse($image, 10 + $x*(600 / $this->xSize), 10 + $y*(600 / $this->ySize), 20, 20, $colour);
+                    imagefilledellipse($image, 10 + $x * (600 / $this->xSize), 10 + $y * (600 / $this->ySize), 20, 20, $colour);
 
                     // $black = imagecolorallocate($image, 0, 0, 0);
                     // // The text to draw
@@ -355,7 +368,8 @@ class Grid
         $survivors = [];
         foreach ($this->cells as $column) {
             foreach ($column as $cell) {
-                if ($cell->getEntity() instanceof Entity
+                if (
+                    $cell->getEntity() instanceof Entity
                     && $survivorFunction($cell)
                 ) {
                     $survivors[] = $cell->getEntity();

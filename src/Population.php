@@ -66,7 +66,7 @@ class Population
         for ($i = 0; $i < $this->populationSize; $i++) {
             $genome = '';
             for ($j = 0; $j < 10; $j++) {
-                $byteInt = rand(0, 255);
+                $byteInt = rand(0, 1027);
                 $byte = str_pad(base_convert($byteInt, 10, 16), 2, "0", STR_PAD_LEFT);
                 $genome .= $byte;
             }
@@ -156,7 +156,7 @@ class Population
                 continue;
             }
             $auxIMG = new \Imagick();
-            $auxIMG->readImage($mytifspath."/".$f);
+            $auxIMG->readImage($mytifspath . "/" . $f);
 
             $multiTIFF->addImage($auxIMG);
         }
@@ -166,9 +166,9 @@ class Population
 
         $files = glob('./tmp/images/*'); // get all file names
         foreach ($files as $file) { // iterate files
-          if (is_file($file)) {
-              unlink($file); // delete file
-          }
+            if (is_file($file)) {
+                unlink($file); // delete file
+            }
         }
     }
 }

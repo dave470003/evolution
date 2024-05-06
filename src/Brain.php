@@ -194,7 +194,7 @@ class Brain
         }
 
         // var_dump($toNeurons);exit;
-        $toNeurons = array_filter($toNeurons, function($neuron) {
+        $toNeurons = array_filter($toNeurons, function ($neuron) {
             return $neuron->getExcitement() > 0.5;
         });
 
